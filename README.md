@@ -5,6 +5,8 @@ Follow Test-Driven-Development in Android
 
 Outside-In Test-Driven Development (TDD) is an approach that starts by writing high-level, end-to-end tests before implementing the underlying components. It is sometimes referred to as "Acceptance Test-Driven Development" (ATDD) or "Behavior-Driven Development" (BDD). In Android development, outside-in TDD can help ensure that your app's features meet the desired behavior from the user's perspective. Here's a step-by-step guide to practicing outside-in TDD in Android:
 
+![](https://raw.githubusercontent.com/outcode-aashutosh/tdd-demo-android/main/images/tdd.webp)
+
 ### Step 1: Define the High-Level Behavior
 
 Start by defining the high-level behavior of the feature you want to implement. These are often expressed as user stories or acceptance criteria. For example, if you're building a To-Do list app, a high-level behavior could be:
