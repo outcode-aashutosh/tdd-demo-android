@@ -52,6 +52,29 @@ After the end-to-end test passes, you can refactor your code to improve its stru
 
 With the high-level feature in place, you can now drill down and write unit tests for individual components, such as ViewModel, Repository, or any other business logic. These unit tests should be written in a traditional TDD fashion—write a failing test first, implement the code, and make the test pass.
 
+    class PlaylistViewModelShould : BaseUnitTest(){
+
+    private val repository: PlaylistRepository = mock()
+    private val playlists = mock<List<Playlist>>()
+    private val expected = Result.success(playlists)
+    private val exception = RuntimeException("Something went wrong")
+
+    @Test
+    fun getPlaylistsFromRepository() = runBlockingTest {
+        val viewModel = mockSuccessfulCase()
+
+        viewModel.playlists.getValueForTest()
+
+        verify(repository, times(1)).getPlaylists()
+    }
+
+    @Test
+    fun emitsPlaylistsFromRepository() = runBlockingTest {
+        val viewModel = mockSuccessfulCase()
+
+        assertEquals(expected, viewModel.playlists.getValueForTest())
+    }
+
 ### Step 8: Continue Iterating
 
 Repeat this process for other high-level features and use cases in your app. Start by writing end-to-end tests that describe the behavior from the user's perspective, implement the features, and write unit tests for components as needed.
