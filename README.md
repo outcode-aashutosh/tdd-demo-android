@@ -17,20 +17,20 @@ Start by defining the high-level behavior of the feature you want to implement. 
 
 Write an end-to-end test that exercises the high-level behavior defined in step 1. You can use UI testing frameworks like Espresso or UI Automator for this. Create a test class and write a test method that simulates the user interaction:
 
-@RunWith(AndroidJUnit4::class)
-class ToDoAppUITest {
+    @RunWith(AndroidJUnit4::class)
+        class ToDoAppUITest {
 
-    @Test
-    fun testAddTask() {
-        // Perform UI actions to add a task
-        onView(withId(R.id.btnAddTask)).perform(click())
-        onView(withId(R.id.editTask)).perform(typeText("Buy Item"))
-        onView(withId(R.id.btnSubmit)).perform(click())
-
-        // Assert that the task has been added
-        onView(withText("Buy Item")).check(matches(isDisplayed()))
+            @Test
+            fun testAddTask() {
+                // Perform UI actions to add a task
+                onView(withId(R.id.btnAddTask)).perform(click())
+                onView(withId(R.id.editTask)).perform(typeText("Buy Item"))
+                onView(withId(R.id.btnSubmit)).perform(click())
+        
+                // Assert that the task has been added
+                onView(withText("Buy Item")).check(matches(isDisplayed()))
+            }
     }
-}
 
 ### Step 3: Run the End-to-End Test (and Watch It Fail)
 
