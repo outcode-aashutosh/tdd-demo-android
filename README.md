@@ -17,20 +17,33 @@ Start by defining the high-level behavior of the feature you want to implement. 
 
 Write an end-to-end test that exercises the high-level behavior defined in step 1. You can use UI testing frameworks like Espresso or UI Automator for this. Create a test class and write a test method that simulates the user interaction:
 
-    @RunWith(AndroidJUnit4::class)
-        class ToDoAppUITest {
+    class PlaylistFeature : BaseUITest(){
 
-            @Test
-            fun testAddTask() {
-                // Perform UI actions to add a task
-                onView(withId(R.id.btnAddTask)).perform(click())
-                onView(withId(R.id.editTask)).perform(typeText("Buy Item"))
-                onView(withId(R.id.btnSubmit)).perform(click())
-        
-                // Assert that the task has been added
-                onView(withText("Buy Item")).check(matches(isDisplayed()))
-            }
+        @Test
+        fun displayScreenTitle() {
+            assertDisplayed("Playlists")
+        }
+    
+    
+        @Test
+        fun displaysListOfPlaylists() {
+    
+            assertRecyclerViewItemCount(R.id.playlists_list, 10)
+    
+            onView(allOf(withId(R.id.playlist_name), isDescendantOfA(nthChildOf(withId(R.id.playlists_list), 0))))
+                .check(matches(withText("Hard Rock Cafe")))
+                .check(matches(isDisplayed()))
+    
+            onView(allOf(withId(R.id.playlist_category), isDescendantOfA(nthChildOf(withId(R.id.playlists_list), 0))))
+                .check(matches(withText("rock")))
+                .check(matches(isDisplayed()))
+    
+            onView(allOf(withId(R.id.playlist_image), isDescendantOfA(nthChildOf(withId(R.id.playlists_list), 1))))
+                .check(matches(withDrawable(R.mipmap.playlist)))
+                .check(matches(isDisplayed()))
+        }
     }
+
 
 ### Step 3: Run the End-to-End Test (and Watch It Fail)
 
@@ -52,27 +65,47 @@ After the end-to-end test passes, you can refactor your code to improve its stru
 
 With the high-level feature in place, you can now drill down and write unit tests for individual components, such as ViewModel, Repository, or any other business logic. These unit tests should be written in a traditional TDD fashion—write a failing test first, implement the code, and make the test pass.
 
-    class PlaylistViewModelShould : BaseUnitTest(){
+    class PlaylistRepositoryShould : BaseUnitTest() {
 
-    private val repository: PlaylistRepository = mock()
-    private val playlists = mock<List<Playlist>>()
-    private val expected = Result.success(playlists)
-    private val exception = RuntimeException("Something went wrong")
-
-    @Test
-    fun getPlaylistsFromRepository() = runBlockingTest {
-        val viewModel = mockSuccessfulCase()
-
-        viewModel.playlists.getValueForTest()
-
-        verify(repository, times(1)).getPlaylists()
+        private val service : PlaylistService = mock()
+        private val mapper : PlaylistMapper = mock()
+        private val playlists = mock<List<Playlist>>()
+        private val playlistsRaw = mock<List<PlaylistRaw>>()
+        private val exception = RuntimeException("Something went wrong")
+    
+        @Test
+        fun getPlaylistsFromService() = runBlockingTest {
+    
+            val repository = mockSuccessfulCase()
+    
+            repository.getPlaylists()
+    
+            verify(service, times(1)).fetchPlaylists()
+        }
     }
 
-    @Test
-    fun emitsPlaylistsFromRepository() = runBlockingTest {
-        val viewModel = mockSuccessfulCase()
+    class PlaylistViewModelShould : BaseUnitTest(){
 
-        assertEquals(expected, viewModel.playlists.getValueForTest())
+        private val repository: PlaylistRepository = mock()
+        private val playlists = mock<List<Playlist>>()
+        private val expected = Result.success(playlists)
+        private val exception = RuntimeException("Something went wrong")
+    
+        @Test
+        fun getPlaylistsFromRepository() = runBlockingTest {
+            val viewModel = mockSuccessfulCase()
+    
+            viewModel.playlists.getValueForTest()
+    
+            verify(repository, times(1)).getPlaylists()
+        }
+    
+        @Test
+        fun emitsPlaylistsFromRepository() = runBlockingTest {
+            val viewModel = mockSuccessfulCase()
+    
+            assertEquals(expected, viewModel.playlists.getValueForTest())
+        }
     }
 
 ### Step 8: Continue Iterating
